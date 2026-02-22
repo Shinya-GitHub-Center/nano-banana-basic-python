@@ -14,7 +14,7 @@ from google import genai
 OUTPUT_DIR = os.getenv("IMAGE_OUTPUT_DIR")
 
 # 一回で生成する画像数
-IMAGE_COUNT = 3
+IMAGE_COUNT = 1
 
 # 画像アスペクト比（サポート: 1:1, 2:3, 3:2, 3:4, 4:3, 4:5, 5:4, 9:16, 16:9, 21:9）
 IMAGE_ASPECT_RATIO = "3:2"
@@ -104,15 +104,20 @@ async def generate_image(prompt, index, output_path):
 
         # レスポンスから画像データを取得
         for part in response.candidates[0].content.parts:
-            if part.inline_data:
+            if hasattr(part, "inline_data") and part.inline_data:
                 image_data = part.inline_data.data
-                buffer = base64.b64decode(image_data)
+
+                # データがすでにbytesの場合はそのまま使用、strの場合はBase64デコード
+                if isinstance(image_data, bytes):
+                    buffer = image_data
+                else:
+                    buffer = base64.b64decode(image_data)
 
                 filename = f"image-{str(index).zfill(2)}.png"
                 filepath = output_path / filename
 
                 filepath.write_bytes(buffer)
-                print(f"   ✅ Generated: {filename}")
+                print(f"   ✅ Generated: {filename} ({len(buffer)} bytes)")
                 return str(filepath)
 
         raise Exception("No image data in response")
