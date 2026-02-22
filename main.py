@@ -95,7 +95,7 @@ async def generate_image(prompt, index, output_path):
             contents=prompt,
             config=genai.types.GenerateContentConfig(
                 response_modalities=["IMAGE"],
-                image_generation_config=genai.types.ImageGenerationConfig(
+                image_config=genai.types.ImageConfig(
                     aspect_ratio=IMAGE_ASPECT_RATIO,
                     image_size=IMAGE_SIZE,
                 ),
