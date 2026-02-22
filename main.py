@@ -22,6 +22,13 @@ IMAGE_ASPECT_RATIO = "3:2"
 # 画像サイズ（サポート: 1K, 2K, 4K）
 IMAGE_SIZE = "1K"
 
+# 生成パラメータ
+TEMPERATURE = 0.2
+TOP_P = 0.95
+
+# システムインストラクション
+SYSTEM_INSTRUCTION = "You are a professional image creator. Generate high-quality images based on the user's request."
+
 # Gemini API Key (環境変数から取得)
 API_KEY = os.getenv("GEMINI_API_KEY")
 
@@ -94,6 +101,9 @@ async def generate_image(prompt, index, output_path):
             model="gemini-2.5-flash-image",
             contents=prompt,
             config=genai.types.GenerateContentConfig(
+                system_instruction=SYSTEM_INSTRUCTION,
+                temperature=TEMPERATURE,
+                top_p=TOP_P,
                 response_modalities=["IMAGE"],
                 image_config=genai.types.ImageConfig(
                     aspect_ratio=IMAGE_ASPECT_RATIO,
@@ -132,9 +142,12 @@ def save_prompt_file(session_dir, prompt):
     metadata = [
         f"Prompt: {prompt}",
         f"Generated: {datetime.now().isoformat()}",
+        f"Model: gemini-2.5-flash-image",
         f"Count: {IMAGE_COUNT}",
         f"Aspect Ratio: {IMAGE_ASPECT_RATIO}",
         f"Image Size: {IMAGE_SIZE}",
+        f"Temperature: {TEMPERATURE}",
+        f"Top P: {TOP_P}",
         f"Output Directory: {session_dir}",
     ]
 
