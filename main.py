@@ -14,7 +14,7 @@ from google import genai
 OUTPUT_DIR = os.getenv("IMAGE_OUTPUT_DIR")
 
 # 一回で生成する画像数
-IMAGE_COUNT = 1
+IMAGE_COUNT = 3
 
 # 画像アスペクト比（サポート: 1:1, 2:3, 3:2, 3:4, 4:3, 4:5, 5:4, 9:16, 16:9, 21:9）
 IMAGE_ASPECT_RATIO = "3:2"
